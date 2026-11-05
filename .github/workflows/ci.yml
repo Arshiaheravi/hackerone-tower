@@ -35,6 +35,18 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             requirements-dev.txt
+      - name: Create an isolated Python environment
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          import venv
+
+          environment = Path(".venv").resolve()
+          venv.EnvBuilder(with_pip=True).create(environment)
+          executables = environment / ("Scripts" if os.name == "nt" else "bin")
+          with open(os.environ["GITHUB_PATH"], "a", encoding="utf-8") as output:
+              output.write(str(executables) + "\n")
       - name: Install pinned dependencies
         run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
       - name: Verify dependencies

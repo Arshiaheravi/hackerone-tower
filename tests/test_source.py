@@ -2,6 +2,8 @@ import base64
 import copy
 import json
 import threading
+import traceback
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -661,8 +663,25 @@ def test_unpaired_unicode_surrogate_is_rejected_before_storage():
 def test_deeply_nested_json_is_a_safe_source_failure():
     body = b'{"data":' + b"[" * 2000 + b"]" * 2000 + b"}"
     source, _ = make_source(lambda request: httpx.Response(200, content=body))
-    with pytest.raises(SourceError, match="invalid JSON"):
+    # Parser nesting limits differ across Python versions. If decoding succeeds,
+    # collection validation must still reject the non-resource nested arrays.
+    with pytest.raises(
+        SourceError, match=r"^HackerOne returned (invalid JSON|a malformed resource)$"
+    ):
         source.list_programs()
+
+
+def test_json_parser_recursion_error_is_redacted(monkeypatch):
+    def parser_failure(_content):
+        raise RecursionError("private-parser-fixture-detail")
+
+    source, _ = make_source(lambda request: httpx.Response(200, content=b'{"data":[]}'))
+    monkeypatch.setattr("tower.source.json", SimpleNamespace(loads=parser_failure))
+    with pytest.raises(SourceError, match=r"^HackerOne returned invalid JSON$") as error:
+        source.list_programs()
+    assert error.value.__cause__ is None
+    assert error.value.__suppress_context__ is True
+    assert "private-parser-fixture-detail" not in "".join(traceback.format_exception(error.value))
 
 
 def test_streaming_response_limit_stops_reading_oversized_body():
