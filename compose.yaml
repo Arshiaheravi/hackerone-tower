@@ -1,0 +1,42 @@
+services:
+  tower:
+    build:
+      context: .
+    image: hackerone-tower:local
+    restart: unless-stopped
+    init: true
+    env_file:
+      - .env
+    environment:
+      TOWER_DATABASE: /app/data/tower.sqlite3
+      TOWER_LOG_DIR: /app/logs
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=32m,mode=1777,noexec,nosuid,nodev
+    volumes:
+      - tower-data:/app/data
+      - tower-logs:/app/logs
+    cpus: 1.0
+    mem_limit: 512m
+    pids_limit: 64
+    stop_grace_period: 45s
+    healthcheck:
+      test: ["CMD", "python", "-m", "tower", "health"]
+      interval: 60s
+      timeout: 10s
+      start_period: 180s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  tower-data:
+  tower-logs:

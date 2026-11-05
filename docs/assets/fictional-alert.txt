@@ -1,0 +1,5 @@
+NEW ASSET
+Program: Fictional demo program (documentation fixture)
+Asset: demo.example.test
+Detected: 2026-01-02 12:00 UTC
+https://hackerone.com/fictional_demo

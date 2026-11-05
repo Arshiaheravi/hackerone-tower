@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools==84.1.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hackerone-tower"
+version = "0.1.0"
+description = "Public HackerOne program change journal and Telegram notification service"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = ["httpx==0.28.1"]
+keywords = ["hackerone", "telegram", "public-metadata", "change-monitoring"]
+
+[project.scripts]
+hackerone-tower = "tower.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["tower*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
