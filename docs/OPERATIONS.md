@@ -57,7 +57,7 @@ The private-chat command menu now has 16 commands. After deployment run `python 
 
 ## Linux VPS migration
 
-Docker configuration is provided, but the Windows development machine has no Docker. A Linux build/runtime test remains a separate gate.
+The hosted Linux Docker build and network-disabled container demo passed; see the [release record](RELEASE.md). The Windows development machine has no local Docker installation. Deployment and live integration checks on the actual VPS remain separate gates.
 
 1. Verify the revision, build from it, and pin `PYTHON_IMAGE` to a tested official image digest.
 2. Stop the Windows task; create a final consistent backup. Securely transfer source and backup. Re-create `.env` locally on the VPS. One bot token must have only one long-polling consumer.

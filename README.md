@@ -1,5 +1,7 @@
 # HackerOne Tower
 
+[![Checks](https://github.com/Arshiaheravi/hackerone-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/Arshiaheravi/hackerone-tower/actions/workflows/ci.yml)
+
 **Public program changes → a durable change journal → short Telegram alerts.**
 
 HackerOne Tower monitors published public HackerOne program metadata and sends short Telegram notifications for newly observed programs, policy changes, and scope additions, edits, or removals. Complete observed records and before-and-after evidence stay in the local journal.
@@ -185,11 +187,11 @@ The default catalog interval is **120 seconds after a completed fetch**. Scope r
 
 The service does not scrape private endpoints, bypass access controls, scan assets, estimate competition, or predict vulnerability discovery. Subscribers must check the current program policy, scope, exclusions and authorization at the source. This is an independent project, not an official HackerOne or Telegram service.
 
-Windows monitoring requires an awake, online, logged-in session. Recovery triggers do not make a laptop an always-available host. Docker runtime, hosted CI, VPS operation and a sustained production soak are separate verification gates. Redistribution/commercial permission must be confirmed before a public or paid feed; billing and paid access control are not implemented.
+Windows monitoring requires an awake, online, logged-in session. Recovery triggers do not make a laptop an always-available host. Hosted Windows/Linux CI and the offline Docker runtime check passed; see the [release evidence](docs/RELEASE.md). VPS operation and a sustained production soak remain separate verification gates. Redistribution/commercial permission must be confirmed before a public or paid feed; billing and paid access control are not implemented.
 
 ## Verification and development
 
-The pagination and retry update passed **574 tests with 95% statement coverage**. Its [release record](docs/RELEASE.md) distinguishes this update's checks from earlier packaging, deployment and Telegram API acceptance. [Earlier live verification](docs/VERIFICATION.md) records prior delivery, recovery and baseline checks. Code coverage is not detection accuracy. API acceptance and human receipt are separate evidence; none of these checks guarantees uninterrupted operation or perfect detection.
+The current suite passes **575 tests** on Windows and Linux with Python 3.11 and 3.12. The local Windows run measured **95% statement coverage**. The [release record](docs/RELEASE.md) links the actual hosted CI results, including package and Docker checks. [Earlier live verification](docs/VERIFICATION.md) records prior delivery, recovery and baseline checks. Code coverage is not detection accuracy. API acceptance and human receipt are separate evidence; none of these checks guarantees uninterrupted operation or perfect detection.
 
 Install the development requirements and run the offline checks:
 

@@ -13,6 +13,11 @@ requires-python = ">=3.11"
 dependencies = ["httpx==0.28.1"]
 keywords = ["hackerone", "telegram", "public-metadata", "change-monitoring"]
 
+[project.urls]
+Repository = "https://github.com/Arshiaheravi/hackerone-tower"
+Documentation = "https://github.com/Arshiaheravi/hackerone-tower#readme"
+Issues = "https://github.com/Arshiaheravi/hackerone-tower/issues"
+
 [project.scripts]
 hackerone-tower = "tower.cli:main"
 

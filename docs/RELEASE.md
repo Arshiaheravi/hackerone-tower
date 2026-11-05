@@ -2,6 +2,16 @@
 
 This record covers the public-source release preparation. The earlier Windows deployment and Telegram receipt evidence are recorded separately in [VERIFICATION.md](VERIFICATION.md). A passing test suite does not establish perfect security, uninterrupted operation, or complete coverage of HackerOne.
 
+## GitHub publication and hosted CI: November 5, 2026
+
+The public repository is [Arshiaheravi/hackerone-tower](https://github.com/Arshiaheravi/hackerone-tower). The initial public commit `33f81f0` contains the 64 reviewed source files from local revision `0cd205f`, with a fresh history and GitHub noreply author identity. Real configuration, subscriber data, logs, backups and private Git history were excluded. Configured-value scans and Gitleaks found no leaked credentials. Private vulnerability reporting is enabled.
+
+Public revision `7495574` passed [GitHub Actions run 42111288537](https://github.com/Arshiaheravi/hackerone-tower/actions/runs/42111288537): all four Windows/Linux and Python 3.11/3.12 jobs, the secret scan, and the Docker build/offline-runtime job succeeded. Each Python job ran the 575-test suite, dependency checks, Ruff, the offline demo, wheel build and installed-wheel smoke check. Windows jobs also checked PowerShell syntax. The Docker job verified the unprivileged user and ran the demo with networking disabled and a read-only filesystem. The local Windows run measured 95% statement coverage.
+
+The first hosted run exposed two environment assumptions. A nested-JSON test expected Python 3.11's parser failure, while Python 3.12 safely rejected the same input during resource validation. The real-input check now accepts exactly those two safe outcomes; a separate deterministic test verifies parser-error redaction. CI also now creates an isolated virtual environment, avoiding a conflict with a runner-preinstalled tool while retaining all project pins and `pip check`. These test/workflow changes correspond to local revision `7563fc5`; application runtime code was unchanged.
+
+The existing Windows monitor continued running with its private configuration and database throughout publication. Passing CI does not establish VPS operation, sustained uptime, complete source coverage or a commercial-service launch. Later documentation-only and package-metadata revisions can be checked through the README's live workflow badge.
+
 ## Scope pagination and persistent retries: November 5, 2026
 
 Scope collection now advances by the last observed ID on every page. This fixes a reproduced false-removal case: deleting an earlier row shifted offset pagination past a surviving asset. The cursor traversal retains that asset and observes appended IDs once. It still validates returned links and rechecks public visibility. Exact multiples of 100 scopes add an empty-page probe; concurrent edits still require later reconciliation.
@@ -16,7 +26,7 @@ Application revision `83138f7` was then deployed to the existing Windows task. R
 
 A read-only live snapshot check collected 102 scope entries across two pages, including a verified ID-cursor request, with a final public-visibility recheck. Both source workers were active, and subsequent catalog and scope collection advanced. At the follow-up observation all 595 tracked public programs were fresh within 30 minutes, the oldest snapshot was about 24.2 minutes old, health/readiness passed, and unresolved program failures plus pending/dead deliveries were zero. This is a point-in-time observation, not a measured fraction of all HackerOne changes detected.
 
-Telegram accepted one explicitly labelled fictional alert in one attempt. The temporary journal passed restart and unchanged-snapshot deduplication checks; human receipt of this particular message was not independently confirmed. GitHub authentication was checked again and remains unavailable, so publishing and hosted CI are still pending.
+Telegram accepted one explicitly labelled fictional alert in one attempt. The temporary journal passed restart and unchanged-snapshot deduplication checks; human receipt of this particular message was not independently confirmed. GitHub authentication, publishing and hosted CI were still pending at this stage.
 
 ## Parallel collection and measured freshness: November 5, 2026
 
@@ -99,4 +109,4 @@ Existing local history is preserved. A fresh public snapshot uses the authentica
 
 The [GitHub Actions workflow](../.github/workflows/ci.yml) is configured for Python 3.11/3.12 on Windows/Linux, package installation checks, a Docker build and network-disabled runtime demo, and secret scanning. Workflow files alone are not evidence that those jobs ran.
 
-At the time of local preparation, GitHub authentication and the first remote push were still pending. Hosted CI and Docker runtime results must be recorded after their actual runs. No CD job deploys to the existing Windows monitor, no live credentials are stored in Actions, and no container or package is automatically published to a registry. Linux VPS deployment remains a separate operation.
+At the time of local preparation, GitHub authentication and the first remote push were still pending. The November 5 publication entry above records the subsequent successful hosted CI and Docker runtime checks. No CD job deploys to the existing Windows monitor, no live credentials are stored in Actions, and no container or package is automatically published to a registry. Linux VPS deployment remains a separate operation.
